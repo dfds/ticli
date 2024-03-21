@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"go.dfds.cloud/mcdonalds/selfservice"
+	"go.dfds.cloud/ticli/selfservice"
 
 	"github.com/spf13/cobra"
 )

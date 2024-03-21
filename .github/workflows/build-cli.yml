@@ -1,4 +1,4 @@
-name: mcdonalds-cli / build
+name: ticli / build
 
 on:
   push:
@@ -24,7 +24,7 @@ permissions:
   contents: read  # This is required for actions/checkout
 
 concurrency:
-  group: 'mcdonalds_cli_build'
+  group: 'ticli_cli_build'
   cancel-in-progress: true
 
 jobs:
@@ -47,7 +47,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::${{ secrets.aws_account_id }}:role/gh-mcdonalds-cli-pipeline
+          role-to-assume: arn:aws:iam::${{ secrets.aws_account_id }}:role/gh-ticli-pipeline
           role-session-name: gh-s3-crud
           aws-region: eu-west-1
       - name: "Upload artifacts"

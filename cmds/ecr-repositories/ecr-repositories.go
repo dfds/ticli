@@ -3,7 +3,7 @@ package ecr_repositories
 import (
 	"fmt"
 
-	"go.dfds.cloud/mcdonalds/selfservice"
+	"go.dfds.cloud/ticli/selfservice"
 
 	"github.com/spf13/cobra"
 )

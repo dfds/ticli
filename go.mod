@@ -1,4 +1,4 @@
-module go.dfds.cloud/mcdonalds
+module go.dfds.cloud/ticli
 
 go 1.20
 

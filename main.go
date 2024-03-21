@@ -1,6 +1,6 @@
 package main
 
-import "go.dfds.cloud/mcdonalds/cmds"
+import "go.dfds.cloud/ticli/cmds"
 
 func main() {
 	cmds.Execute()

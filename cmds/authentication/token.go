@@ -8,7 +8,7 @@ import (
 
 	rice "github.com/GeertJohan/go.rice"
 	log "github.com/sirupsen/logrus"
-	"go.dfds.cloud/mcdonalds/cmds/configuration"
+	"go.dfds.cloud/ticli/cmds/configuration"
 )
 
 func ResponseServer() {

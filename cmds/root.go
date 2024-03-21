@@ -5,11 +5,11 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"go.dfds.cloud/mcdonalds/cmds/authentication"
-	"go.dfds.cloud/mcdonalds/cmds/capability"
-	"go.dfds.cloud/mcdonalds/cmds/configuration"
-	ecr_repositories "go.dfds.cloud/mcdonalds/cmds/ecr-repositories"
-	kafka_topics "go.dfds.cloud/mcdonalds/cmds/kafka-topics"
+	"go.dfds.cloud/ticli/cmds/authentication"
+	"go.dfds.cloud/ticli/cmds/capability"
+	"go.dfds.cloud/ticli/cmds/configuration"
+	ecr_repositories "go.dfds.cloud/ticli/cmds/ecr-repositories"
+	kafka_topics "go.dfds.cloud/ticli/cmds/kafka-topics"
 )
 
 var (
@@ -25,12 +25,9 @@ func main() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "mcdonalds",
-	Short: "cli for querying dfds capabilities",
-	Long:  `cli for querying dfds capabilities`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("I like burgers")
-	},
+	Use:   "ticli",
+	Short: "cli for dfds selfservice",
+	Long:  `cli for dfds selfservice`,
 }
 
 func Execute() {
