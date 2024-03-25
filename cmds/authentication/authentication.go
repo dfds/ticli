@@ -6,6 +6,7 @@ import (
 
 	"github.com/pkg/browser"
 	log "github.com/sirupsen/logrus"
+	"go.dfds.cloud/ticli/cmds/configuration"
 
 	"github.com/spf13/cobra"
 )
@@ -19,7 +20,7 @@ var AuthenticationCmd = &cobra.Command{
 }
 
 func InitializeAuthentication() {
-	// nothing to see here yet, but the wiring now exists
+	AuthenticationCmd.AddCommand(clearInformationCmd)
 }
 
 func authenticateCmdFunction(cmd *cobra.Command, args []string) {
@@ -42,4 +43,12 @@ func authenticateCmdFunction(cmd *cobra.Command, args []string) {
 
 	browser.OpenURL(urlParsed.String())
 	ResponseServer()
+}
+
+var clearInformationCmd = &cobra.Command{
+	Use:   "clear",
+	Short: "removes all stored authentication data",
+	Run: func(cmd *cobra.Command, args []string) {
+		configuration.ClearAccessToken()
+	},
 }
