@@ -15,6 +15,7 @@ var (
 
 	description string
 	metadata    string
+	invitees    []string
 )
 
 var CapabilityCmd = &cobra.Command{
@@ -33,9 +34,12 @@ func InitializeCapability(accessToken string) {
 
 	createCapabilityCmd.PersistentFlags().StringVar(&description, "description", "", "adds a description to a capability (required)")
 	configuration.BindFlag("description", createCapabilityCmd.PersistentFlags().Lookup("description"))
-	//createCapabilityCmd.MarkFlagRequired("description")
-	createCapabilityCmd.PersistentFlags().StringVar(&metadata, "metadata", "", "add matadata JSON to a capability")
+	cobra.MarkFlagRequired(createCapabilityCmd.PersistentFlags(), "description")
+	createCapabilityCmd.PersistentFlags().StringVar(&metadata, "metadata", "", "add matadata JSON to a capability; the only required field of the JSON is the cost centre (required)")
 	configuration.BindFlag("metadata", createCapabilityCmd.PersistentFlags().Lookup("metadata"))
+	cobra.MarkFlagRequired(createCapabilityCmd.PersistentFlags(), "metadata")
+	createCapabilityCmd.PersistentFlags().StringArrayVar(&invitees, "invitees", []string{}, "add invitees array to a capability")
+	configuration.BindFlag("invitees", createCapabilityCmd.PersistentFlags().Lookup("invitees"))
 
 	selfserviceClient = selfservice.NewSelfServiceClient(accessToken)
 }
@@ -74,7 +78,7 @@ var createCapabilityCmd = &cobra.Command{
 		capabilityStruct := selfservice.CapabilityRequest{
 			Name:         args[0],
 			Description:  description,
-			Invitees:     []string{},
+			Invitees:     invitees,
 			JsonMetadata: metadata,
 		}
 		fmt.Println(capabilityStruct)

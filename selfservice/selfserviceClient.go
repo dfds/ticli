@@ -12,7 +12,7 @@ import (
 
 const baseURL = "https://api.hellman.oxygen.dfds.cloud/ssu/api"
 
-//dev environment URL for testing
+// dev environment URL for testing
 //const devURL = "https://api.hellman.oxygen.dfds.cloud/ssu/dev-env/develop/api"
 
 type SelfServiceClient struct {
