@@ -13,7 +13,7 @@ import (
 const baseURL = "https://api.hellman.oxygen.dfds.cloud/ssu/api"
 
 // dev environment URL for testing
-const devURL = "https://api.hellman.oxygen.dfds.cloud/ssu/dev-env/develop/api"
+//const devURL = "https://api.hellman.oxygen.dfds.cloud/ssu/dev-env/develop/api"
 
 type SelfServiceClient struct {
 	AccessToken string
@@ -153,7 +153,7 @@ func (sc *SelfServiceClient) CreateCapability(body CapabilityRequest) Capabiliti
 }
 
 func (sc *SelfServiceClient) CreateECRRepo(body CapabilityRequest) EcrResponse {
-	url := fmt.Sprintf("%s/ecr/repositories", devURL)
+	url := fmt.Sprintf("%s/ecr/repositories", baseURL)
 
 	payload, err := json.Marshal(body)
 	if err != nil {
