@@ -53,13 +53,13 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "print moar stuff (default: false)")
 	configuration.BindFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 
-	rootCmd.PersistentFlags().StringVarP(&accessToken, "access-token", "", "", "Provide an access token (or simply run authentication)")
+	rootCmd.PersistentFlags().StringVarP(&accessToken, "access-token", "t", "", "Provide an access token (or simply run authentication)")
 	configuration.BindFlag("access-token", rootCmd.PersistentFlags().Lookup("access-token"))
 
 	rootCmd.PersistentFlags().BoolVarP(&noVersionCheck, "no-version-check", "", false, "Disable version check")
 	configuration.BindFlag("no-version-check", rootCmd.PersistentFlags().Lookup("no-version-check"))
 
-	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output-format", "", "", "Choose output format [json] (default: json)")
+	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output-format", "f", "", "Choose output format [json] (default: json)")
 	configuration.BindFlag("output-format", rootCmd.PersistentFlags().Lookup("output-format"))
 
 	// Commands
