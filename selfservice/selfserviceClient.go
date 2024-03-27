@@ -1,6 +1,7 @@
 package selfservice
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,6 +11,9 @@ import (
 )
 
 const baseURL = "https://api.hellman.oxygen.dfds.cloud/ssu/api"
+
+// dev environment URL for testing
+//const devURL = "https://api.hellman.oxygen.dfds.cloud/ssu/dev-env/develop/api"
 
 type SelfServiceClient struct {
 	AccessToken string
@@ -35,6 +39,36 @@ func (sc *SelfServiceClient) queryServer(url string) []byte {
 
 	if response.StatusCode != 200 {
 		log.Fatal("Unexpected status code: ", response.StatusCode)
+	}
+
+	responseBody, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return responseBody
+}
+
+func (sc *SelfServiceClient) queryServerPost(url string, body []byte) []byte {
+
+	request, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", sc.AccessToken))
+	client := &http.Client{}
+
+	response, err := client.Do(request)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if response.StatusCode != 200 {
+		log.Fatal("Unexpected status code: ", response.StatusCode)
+
 	}
 
 	responseBody, err := io.ReadAll(response.Body)
@@ -97,6 +131,25 @@ func (sc *SelfServiceClient) GetTopics() TopicsResponse {
 
 	return topicsResponse
 
+}
+
+func (sc *SelfServiceClient) CreateCapability(body CapabilityRequest) CapabilitiesResponse {
+	url := fmt.Sprintf("%s/capabilities", baseURL)
+
+	payload, err := json.Marshal(body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	responseBody := sc.queryServerPost(url, payload)
+	var capabilitiesResponse CapabilitiesResponse
+
+	err = json.Unmarshal(responseBody, &capabilitiesResponse)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return capabilitiesResponse
 }
 
 type CapabilitiesResponse struct {
@@ -276,4 +329,10 @@ type CapabilityByIDResponse struct {
 			Allow []string `json:"allow"`
 		} `json:"configurationLevel"`
 	} `json:"_links"`
+}
+type CapabilityRequest struct {
+	Name         string   `json:"name"`
+	Description  string   `json:"description"`
+	Invitees     []string `json:"invitees"`
+	JsonMetadata string   `json:"jsonMetadata"`
 }
