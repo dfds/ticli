@@ -9,6 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	accessTokenFile = "token.json"
+)
+
 func homeConfigDirectory() string {
 	homedir, err := os.UserHomeDir()
 	if err != nil {
@@ -75,7 +79,12 @@ func SaveAccessToken(accessToken string) {
 	v := viper.New()
 	v.Set("access-token", accessToken)
 
-	v.WriteConfigAs(fmt.Sprintf("%s/token.json", configPath))
+	v.WriteConfigAs(fmt.Sprintf("%s/%s", configPath, accessTokenFile))
+}
+
+func ClearAccessToken() {
+	configPath := homeConfigDirectory()
+	os.Remove(fmt.Sprintf("%s/%s", configPath, accessTokenFile))
 }
 
 func BindFlag(key string, flag *pflag.Flag) {

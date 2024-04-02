@@ -52,8 +52,6 @@ func init() {
 	configuration.BindFlag("access-token", rootCmd.PersistentFlags().Lookup("access-token"))
 
 	// Commands
-	rootCmd.AddCommand(configuration.TestConfigurationCmd)
-
 	capability.InitializeCapability(configuration.GetString("access-token"))
 	rootCmd.AddCommand(capability.CapabilityCmd)
 
@@ -65,6 +63,4 @@ func init() {
 
 	kafka_topics.InitTopics(configuration.GetString("access-token"))
 	rootCmd.AddCommand(kafka_topics.TopicsCmd)
-
-	rootCmd.AddCommand(configuration.TestConfigurationCmd)
 }
