@@ -5,6 +5,7 @@ import (
 	"go.dfds.cloud/ticli/cmds/configuration"
 	"os"
 
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 	"go.dfds.cloud/ticli/selfservice"
 
 	"github.com/spf13/cobra"
@@ -22,7 +23,7 @@ var CapabilityCmd = &cobra.Command{
 	Use:   "capability",
 	Short: "query capabilities",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Can I take your order")
+		cmd.Help()
 	},
 }
 
@@ -48,7 +49,7 @@ var queryCmd = &cobra.Command{
 	Short: "query the API",
 	Run: func(cmd *cobra.Command, args []string) {
 		capabilities := selfserviceClient.GetCapabilities()
-		fmt.Println(capabilities)
+		outputwriter.GetWriter().WriteData(capabilities)
 	},
 }
 
@@ -57,12 +58,11 @@ var capabilityByIdCmd = &cobra.Command{
 	Short: "returns a capability by id",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println("Missing id")
+			outputwriter.GetWriter().WriteError(fmt.Errorf("missing id"))
 			os.Exit(1)
 		}
 		capabilityById := selfserviceClient.GetCapabilityByID(args[0])
-		fmt.Println(capabilityById)
-
+		outputwriter.GetWriter().WriteData(capabilityById)
 	},
 }
 
