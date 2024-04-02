@@ -2,11 +2,11 @@ package configuration
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 )
 
 var (
@@ -16,9 +16,10 @@ var (
 func homeConfigDirectory() string {
 	homedir, err := os.UserHomeDir()
 	if err != nil {
-		log.Fatalf("Error while getting home directory %s", err)
+		outputwriter.GetWriter().WriteError(fmt.Errorf("error while getting home directory %s", err))
 	}
-	homeConfigDirectory := fmt.Sprintf("%s/.mcdonald/", homedir)
+
+	homeConfigDirectory := fmt.Sprintf("%s/.ticli/", homedir)
 
 	_ = os.Mkdir(homeConfigDirectory, os.ModePerm)
 
@@ -28,13 +29,13 @@ func homeConfigDirectory() string {
 func InitializeConfiguration() {
 	homeConfigDir := homeConfigDirectory()
 
-	viper.SetConfigName("mcconfig")
+	viper.SetConfigName("ticli")
 	viper.AddConfigPath(homeConfigDir)
 
 	err := viper.ReadInConfig()
 	if err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			log.Fatalf("Error while reading home config file %s", err)
+			outputwriter.GetWriter().WriteError(fmt.Errorf("error while reading home config file %s", err))
 		}
 	}
 
@@ -44,27 +45,27 @@ func InitializeConfiguration() {
 	err = tokenViper.ReadInConfig()
 	if err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			log.Fatalf("Error while reading token config file %s", err)
+			outputwriter.GetWriter().WriteError(fmt.Errorf("error while reading token config file %s", err))
 		}
 	}
 
 	localViper := viper.New()
-	localViper.SetConfigName("mcconfig")
+	localViper.SetConfigName("ticli")
 	localViper.AddConfigPath(".")
 	err = localViper.ReadInConfig()
 	if err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			log.Fatalf("Error while reading local config file %s", err)
+			outputwriter.GetWriter().WriteError(fmt.Errorf("error while reading local config file %s", err))
 		}
 	}
 
 	err = viper.MergeConfigMap(localViper.AllSettings())
 	if err != nil {
-		log.Fatalf("Error while merging config file %s", err)
+		outputwriter.GetWriter().WriteError(fmt.Errorf("error while merging config file %s", err))
 	}
 	err = viper.MergeConfigMap(tokenViper.AllSettings())
 	if err != nil {
-		log.Fatalf("Error while merging config file %s", err)
+		outputwriter.GetWriter().WriteError(fmt.Errorf("error while merging config file %s", err))
 	}
 
 }

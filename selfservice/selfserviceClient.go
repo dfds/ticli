@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 )
 
 const baseURL = "https://api.hellman.oxygen.dfds.cloud/ssu/api"
@@ -26,7 +28,7 @@ func NewSelfServiceClient(accessToken string) *SelfServiceClient {
 func (sc *SelfServiceClient) queryServer(url string) []byte {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
 	}
 
 	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", sc.AccessToken))
@@ -34,16 +36,16 @@ func (sc *SelfServiceClient) queryServer(url string) []byte {
 
 	response, err := client.Do(request)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
 	}
 
 	if response.StatusCode != 200 {
-		log.Fatal("Unexpected status code: ", response.StatusCode)
+		outputwriter.GetWriter().WriteError(fmt.Errorf("unexpected status code: ", response.StatusCode))
 	}
 
 	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
 	}
 
 	return responseBody
