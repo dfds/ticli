@@ -29,8 +29,7 @@ var CapabilityCmd = &cobra.Command{
 func InitializeCapability(accessToken string) {
 	CapabilityCmd.AddCommand(queryCmd)
 	CapabilityCmd.AddCommand(capabilityByIdCmd)
-	b := createCapabilityCmd
-	CapabilityCmd.AddCommand(b)
+	CapabilityCmd.AddCommand(createCapabilityCmd)
 
 	createCapabilityCmd.PersistentFlags().StringVar(&description, "description", "", "adds a description to a capability (required)")
 	configuration.BindFlag("description", createCapabilityCmd.PersistentFlags().Lookup("description"))
@@ -81,7 +80,7 @@ var createCapabilityCmd = &cobra.Command{
 			Invitees:     invitees,
 			JsonMetadata: metadata,
 		}
-		fmt.Println(capabilityStruct)
+
 		capability := selfserviceClient.CreateCapability(capabilityStruct)
 		fmt.Println(capability)
 

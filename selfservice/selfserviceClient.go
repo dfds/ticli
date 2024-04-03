@@ -152,6 +152,25 @@ func (sc *SelfServiceClient) CreateCapability(body CapabilityRequest) Capabiliti
 	return capabilitiesResponse
 }
 
+func (sc *SelfServiceClient) CreateECRRepo(body CapabilityRequest) EcrResponse {
+	url := fmt.Sprintf("%s/ecr/repositories", baseURL)
+
+	payload, err := json.Marshal(body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	responseBody := sc.queryServerPost(url, payload)
+	var ecrResponse EcrResponse
+
+	err = json.Unmarshal(responseBody, &ecrResponse)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return ecrResponse
+}
+
 type CapabilitiesResponse struct {
 	Items []struct {
 		ID           string `json:"id"`
@@ -335,4 +354,8 @@ type CapabilityRequest struct {
 	Description  string   `json:"description"`
 	Invitees     []string `json:"invitees"`
 	JsonMetadata string   `json:"jsonMetadata"`
+}
+type ECRRequest struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
