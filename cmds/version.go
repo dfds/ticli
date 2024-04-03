@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 )
 
 var (
@@ -28,7 +30,7 @@ func remoteVersionCheck() {
 	var tags []Tag
 	err = json.NewDecoder(resp.Body).Decode(&tags)
 	if err != nil {
-		fmt.Println("Version Check: Error parsing JSON response:", err)
+		outputwriter.GetWriter().WriteError(fmt.Errorf("version check: error while parsing JSON response: %s", err))
 		return
 	}
 
@@ -38,7 +40,5 @@ func remoteVersionCheck() {
 		if latestTag != Version {
 			panic("Version Check: New version of Ticli available, please update to the latest version")
 		}
-	} else {
-		fmt.Println("Version Check: No remote version found, ignoring version verification")
 	}
 }
