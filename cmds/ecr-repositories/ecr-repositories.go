@@ -46,11 +46,11 @@ var queryCmd = &cobra.Command{
 }
 
 var createECRCmd = &cobra.Command{
-	Use:   "create [NAME]",
+	Use:   "create [id]",
 	Short: "creates a new ecr repository",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println("Missing id")
+			outputwriter.GetWriter().WriteError(fmt.Errorf("missing id"))
 			os.Exit(1)
 		}
 		ecrStruct := selfservice.CapabilityRequest{
@@ -59,7 +59,7 @@ var createECRCmd = &cobra.Command{
 		}
 
 		ecr := selfserviceClient.CreateECRRepo(ecrStruct)
-		fmt.Println(ecr)
+		outputwriter.GetWriter().WriteData(ecr)
 
 	},
 }

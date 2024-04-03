@@ -37,7 +37,7 @@ var rootCmd = &cobra.Command{
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		outputwriter.GetWriter().WriteError(fmt.Errorf("error while executing root command %s", err))
 		os.Exit(1)
 	}
 }

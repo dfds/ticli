@@ -2,8 +2,9 @@ package capability
 
 import (
 	"fmt"
-	"go.dfds.cloud/ticli/cmds/configuration"
 	"os"
+
+	"go.dfds.cloud/ticli/cmds/configuration"
 
 	"go.dfds.cloud/ticli/cmds/outputwriter"
 	"go.dfds.cloud/ticli/selfservice"
@@ -71,7 +72,7 @@ var createCapabilityCmd = &cobra.Command{
 	Short: "creates a new capability",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println("Missing id")
+			outputwriter.GetWriter().WriteError(fmt.Errorf("missing name"))
 			os.Exit(1)
 		}
 		capabilityStruct := selfservice.CapabilityRequest{
@@ -82,7 +83,7 @@ var createCapabilityCmd = &cobra.Command{
 		}
 
 		capability := selfserviceClient.CreateCapability(capabilityStruct)
-		fmt.Println(capability)
+		outputwriter.GetWriter().WriteData(capability)
 
 	},
 }
