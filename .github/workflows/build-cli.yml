@@ -2,15 +2,8 @@ name: ticli / build
 
 on:
   push:
-    branches:
-      - 'main'
-      - 'build-pipeline'
-    paths:
-      - '.github/workflows/build-cli.yml'
-      - 'cmds/**'
-      - 'selfservice/**'
-      - 'main.go'
-      - 'go.*'
+    tags:
+      - '*'
   workflow_dispatch:
     inputs:
       deploy:
@@ -42,7 +35,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: "Build ce-cli"
-        run: sh ./build.sh
+        run: sh ./build.sh $(git describe --tags --abbrev=0)
         shell: bash
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2

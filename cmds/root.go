@@ -14,20 +14,22 @@ import (
 
 var (
 	// Used for flags.
-	cfgFile     string
-	verbose     bool
-	accessToken string
+	cfgFile        string
+	verbose        bool
+	accessToken    string
+	noVersionCheck bool
 )
 
-func main() {
-	Execute()
-
-}
-
 var rootCmd = &cobra.Command{
-	Use:   "ticli",
-	Short: "cli for dfds selfservice",
-	Long:  `cli for dfds selfservice`,
+	Use:     "ticli",
+	Version: Version,
+	Short:   "cli for dfds selfservice",
+	Long:    `cli for dfds selfservice`,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if !noVersionCheck {
+			remoteVersionCheck()
+		}
+	},
 }
 
 func Execute() {
@@ -50,6 +52,9 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&accessToken, "access-token", "", "", "Provide an access token (or simply run authentication)")
 	configuration.BindFlag("access-token", rootCmd.PersistentFlags().Lookup("access-token"))
+
+	rootCmd.PersistentFlags().BoolVarP(&noVersionCheck, "no-version-check", "", false, "Disable version check")
+	configuration.BindFlag("no-version-check", rootCmd.PersistentFlags().Lookup("no-version-check"))
 
 	// Commands
 	capability.InitializeCapability(configuration.GetString("access-token"))
