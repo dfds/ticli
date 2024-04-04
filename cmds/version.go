@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
 	"go.dfds.cloud/ticli/cmds/outputwriter"
 )
@@ -21,8 +22,8 @@ func remoteVersionCheck() {
 	// Send GET request to GitHub API
 	resp, err := http.Get(repositoryUrl)
 	if err != nil {
-		fmt.Println("Version Check: Error fetching Ticli tags:", err)
-		return
+		outputwriter.GetWriter().WriteError(fmt.Errorf("version check: error while getting ticli tags: %s", err))
+		os.Exit(1)
 	}
 	defer resp.Body.Close()
 
@@ -31,14 +32,15 @@ func remoteVersionCheck() {
 	err = json.NewDecoder(resp.Body).Decode(&tags)
 	if err != nil {
 		outputwriter.GetWriter().WriteError(fmt.Errorf("version check: error while parsing JSON response: %s", err))
-		return
+		os.Exit(1)
 	}
 
 	// Assuming tags are returned in chronological order, the first tag will be the latest
 	if len(tags) > 0 {
 		latestTag := tags[0].Name
 		if latestTag != Version {
-			panic("Version Check: New version of Ticli available, please update to the latest version")
+			outputwriter.GetWriter().WriteError(fmt.Errorf("version Check: New version of Ticli available, please update to the latest version"))
+			os.Exit(1)
 		}
 	}
 }

@@ -22,11 +22,13 @@ func successHandler(resp http.ResponseWriter, req *http.Request) {
 	buf, err := box.Bytes("success.html")
 	if err != nil {
 		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	err = req.ParseForm()
 	if err != nil {
 		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	accessToken := req.Form.Get("token")
