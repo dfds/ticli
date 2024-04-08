@@ -7,8 +7,8 @@ import (
 	"time"
 
 	rice "github.com/GeertJohan/go.rice"
-	log "github.com/sirupsen/logrus"
 	"go.dfds.cloud/ticli/cmds/configuration"
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 )
 
 func ResponseServer() {
@@ -17,20 +17,18 @@ func ResponseServer() {
 	http.ListenAndServe(":4200", nil)
 }
 
-type templateVars struct {
-	Token string
-}
-
 func successHandler(resp http.ResponseWriter, req *http.Request) {
 	box := rice.MustFindBox("web")
 	buf, err := box.Bytes("success.html")
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	err = req.ParseForm()
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	accessToken := req.Form.Get("token")

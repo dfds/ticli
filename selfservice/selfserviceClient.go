@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
+	"os"
 	"time"
+
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 )
 
 const baseURL = "https://api.hellman.oxygen.dfds.cloud/ssu/api"
@@ -23,10 +25,11 @@ func NewSelfServiceClient(accessToken string) *SelfServiceClient {
 	return &SelfServiceClient{AccessToken: accessToken}
 }
 
-func (sc *SelfServiceClient) queryServer(url string) []byte {
+func (sc *SelfServiceClient) get(url string) []byte {
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", sc.AccessToken))
@@ -34,26 +37,30 @@ func (sc *SelfServiceClient) queryServer(url string) []byte {
 
 	response, err := client.Do(request)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	if response.StatusCode != 200 {
-		log.Fatal("Unexpected status code: ", response.StatusCode)
+		outputwriter.GetWriter().WriteError(fmt.Errorf("unexpected status code: %d", response.StatusCode))
+		os.Exit(1)
 	}
 
 	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	return responseBody
 }
 
-func (sc *SelfServiceClient) queryServerPost(url string, body []byte) []byte {
+func (sc *SelfServiceClient) post(url string, body []byte) []byte {
 
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	request.Header.Set("Content-Type", "application/json")
@@ -63,17 +70,19 @@ func (sc *SelfServiceClient) queryServerPost(url string, body []byte) []byte {
 
 	response, err := client.Do(request)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	if response.StatusCode != 200 {
-		log.Fatal("Unexpected status code: ", response.StatusCode)
-
+		outputwriter.GetWriter().WriteError(fmt.Errorf("unexpected status code: %d", response.StatusCode))
+		os.Exit(1)
 	}
 
 	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	return responseBody
@@ -81,12 +90,13 @@ func (sc *SelfServiceClient) queryServerPost(url string, body []byte) []byte {
 
 func (sc *SelfServiceClient) GetCapabilities() CapabilitiesResponse {
 	url := fmt.Sprintf("%s/capabilities", baseURL)
-	responseBody := sc.queryServer(url)
+	responseBody := sc.get(url)
 	var capabilitiesResponse CapabilitiesResponse
 
 	err := json.Unmarshal(responseBody, &capabilitiesResponse)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	return capabilitiesResponse
@@ -95,12 +105,13 @@ func (sc *SelfServiceClient) GetCapabilities() CapabilitiesResponse {
 func (sc *SelfServiceClient) GetCapabilityByID(id string) CapabilityByIDResponse {
 
 	url := fmt.Sprintf("%s/capabilities/%s", baseURL, id)
-	responseBody := sc.queryServer(url)
+	responseBody := sc.get(url)
 	var capabilitiesResponse CapabilityByIDResponse
 
 	err := json.Unmarshal(responseBody, &capabilitiesResponse)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	return capabilitiesResponse
@@ -108,12 +119,13 @@ func (sc *SelfServiceClient) GetCapabilityByID(id string) CapabilityByIDResponse
 
 func (sc *SelfServiceClient) GetECRRepositories() []EcrResponse {
 	url := fmt.Sprintf("%s/ecr/repositories", baseURL)
-	responseBody := sc.queryServer(url)
+	responseBody := sc.get(url)
 	var ecrResponse []EcrResponse
 
 	err := json.Unmarshal(responseBody, &ecrResponse)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	return ecrResponse
@@ -121,12 +133,13 @@ func (sc *SelfServiceClient) GetECRRepositories() []EcrResponse {
 
 func (sc *SelfServiceClient) GetTopics() TopicsResponse {
 	url := fmt.Sprintf("%s/kafkatopics", baseURL)
-	responseBody := sc.queryServer(url)
+	responseBody := sc.get(url)
 	var topicsResponse TopicsResponse
 
 	err := json.Unmarshal(responseBody, &topicsResponse)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	return topicsResponse
@@ -138,15 +151,17 @@ func (sc *SelfServiceClient) CreateCapability(body CapabilityRequest) Capabiliti
 
 	payload, err := json.Marshal(body)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
-	responseBody := sc.queryServerPost(url, payload)
+	responseBody := sc.post(url, payload)
 	var capabilitiesResponse CapabilitiesResponse
 
 	err = json.Unmarshal(responseBody, &capabilitiesResponse)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	return capabilitiesResponse
@@ -157,15 +172,17 @@ func (sc *SelfServiceClient) CreateECRRepo(body CapabilityRequest) EcrResponse {
 
 	payload, err := json.Marshal(body)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
-	responseBody := sc.queryServerPost(url, payload)
+	responseBody := sc.post(url, payload)
 	var ecrResponse EcrResponse
 
 	err = json.Unmarshal(responseBody, &ecrResponse)
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
+		os.Exit(1)
 	}
 
 	return ecrResponse

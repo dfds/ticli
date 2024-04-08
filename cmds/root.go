@@ -10,6 +10,7 @@ import (
 	"go.dfds.cloud/ticli/cmds/configuration"
 	ecr_repositories "go.dfds.cloud/ticli/cmds/ecr-repositories"
 	kafka_topics "go.dfds.cloud/ticli/cmds/kafka-topics"
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 )
 
 var (
@@ -18,6 +19,7 @@ var (
 	verbose        bool
 	accessToken    string
 	noVersionCheck bool
+	outputFormat   string = "json"
 )
 
 var rootCmd = &cobra.Command{
@@ -29,12 +31,13 @@ var rootCmd = &cobra.Command{
 		if !noVersionCheck {
 			remoteVersionCheck()
 		}
+		outputwriter.SetWriter(outputFormat)
 	},
 }
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		outputwriter.GetWriter().WriteError(fmt.Errorf("error while executing root command %s", err))
 		os.Exit(1)
 	}
 }
@@ -50,11 +53,14 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "print moar stuff (default: false)")
 	configuration.BindFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 
-	rootCmd.PersistentFlags().StringVarP(&accessToken, "access-token", "", "", "Provide an access token (or simply run authentication)")
+	rootCmd.PersistentFlags().StringVarP(&accessToken, "access-token", "t", "", "Provide an access token (or simply run authentication)")
 	configuration.BindFlag("access-token", rootCmd.PersistentFlags().Lookup("access-token"))
 
 	rootCmd.PersistentFlags().BoolVarP(&noVersionCheck, "no-version-check", "", false, "Disable version check")
 	configuration.BindFlag("no-version-check", rootCmd.PersistentFlags().Lookup("no-version-check"))
+
+	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output-format", "f", "", "Choose output format [json] (default: json)")
+	configuration.BindFlag("output-format", rootCmd.PersistentFlags().Lookup("output-format"))
 
 	// Commands
 	capability.InitializeCapability(configuration.GetString("access-token"))

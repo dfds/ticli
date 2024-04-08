@@ -2,9 +2,11 @@ package ecr_repositories
 
 import (
 	"fmt"
-	"go.dfds.cloud/ticli/cmds/configuration"
 	"os"
 
+	"go.dfds.cloud/ticli/cmds/configuration"
+
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 	"go.dfds.cloud/ticli/selfservice"
 
 	"github.com/spf13/cobra"
@@ -17,9 +19,9 @@ var (
 
 var ECRCmd = &cobra.Command{
 	Use:   "ecr",
-	Short: "ecr-repo",
+	Short: "Manage Selfservice AWS ECR repositories",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Show ecr repositories")
+		cmd.Help()
 	},
 }
 
@@ -29,6 +31,7 @@ func InitializeECR(accessToken string) {
 
 	createECRCmd.PersistentFlags().StringVar(&description, "description", "", "adds a description to a ecr (required)")
 	configuration.BindFlag("description", createECRCmd.PersistentFlags().Lookup("description"))
+	ECRCmd.AddCommand(queryCmd)
 
 	selfserviceClient = selfservice.NewSelfServiceClient(accessToken)
 }
@@ -37,19 +40,17 @@ var queryCmd = &cobra.Command{
 	Use:   "query",
 	Short: "query the API",
 	Run: func(cmd *cobra.Command, args []string) {
-		idInput, _ := cmd.Flags().GetString("id")
-		fmt.Println(idInput)
 		repositories := selfserviceClient.GetECRRepositories()
-		fmt.Println(repositories)
+		outputwriter.GetWriter().WriteData(repositories)
 	},
 }
 
 var createECRCmd = &cobra.Command{
-	Use:   "create [NAME]",
+	Use:   "create [id]",
 	Short: "creates a new ecr repository",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println("Missing id")
+			outputwriter.GetWriter().WriteError(fmt.Errorf("missing id"))
 			os.Exit(1)
 		}
 		ecrStruct := selfservice.CapabilityRequest{
@@ -58,7 +59,7 @@ var createECRCmd = &cobra.Command{
 		}
 
 		ecr := selfserviceClient.CreateECRRepo(ecrStruct)
-		fmt.Println(ecr)
+		outputwriter.GetWriter().WriteData(ecr)
 
 	},
 }

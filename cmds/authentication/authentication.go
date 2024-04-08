@@ -5,8 +5,8 @@ import (
 	"net/url"
 
 	"github.com/pkg/browser"
-	log "github.com/sirupsen/logrus"
 	"go.dfds.cloud/ticli/cmds/configuration"
+	"go.dfds.cloud/ticli/cmds/outputwriter"
 
 	"github.com/spf13/cobra"
 )
@@ -30,7 +30,7 @@ func authenticateCmdFunction(cmd *cobra.Command, args []string) {
 
 	urlParsed, err := url.Parse(fmt.Sprintf("https://login.microsoftonline.com/%s/oauth2/v2.0/authorize", tenant))
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
 	}
 
 	values := urlParsed.Query()
