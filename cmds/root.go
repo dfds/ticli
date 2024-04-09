@@ -19,8 +19,25 @@ var (
 	verbose        bool
 	accessToken    string
 	noVersionCheck bool
-	outputFormat   string = "json"
+	jsonOutput     bool
+	yamlOutput     bool
 )
+
+func setOutputWriter() {
+	outputwriter.SetWriter(outputwriter.CreateDefaultWriter())
+
+	if jsonOutput && yamlOutput {
+		outputwriter.GetWriter().WriteError(fmt.Errorf("only one of json or yaml output can be selected"))
+		os.Exit(1)
+	}
+
+	if jsonOutput {
+		outputwriter.SetWriter(outputwriter.CreateJsonWriter())
+	}
+	if yamlOutput {
+		outputwriter.SetWriter(outputwriter.CreateYamlWriter())
+	}
+}
 
 var rootCmd = &cobra.Command{
 	Use:     "ticli",
@@ -31,7 +48,8 @@ var rootCmd = &cobra.Command{
 		if !noVersionCheck {
 			remoteVersionCheck()
 		}
-		outputwriter.SetWriter(outputFormat)
+
+		setOutputWriter()
 	},
 }
 
@@ -59,8 +77,11 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&noVersionCheck, "no-version-check", "", false, "Disable version check")
 	configuration.BindFlag("no-version-check", rootCmd.PersistentFlags().Lookup("no-version-check"))
 
-	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output-format", "f", "", "Choose output format [json] (default: json)")
-	configuration.BindFlag("output-format", rootCmd.PersistentFlags().Lookup("output-format"))
+	rootCmd.PersistentFlags().BoolVarP(&jsonOutput, "json", "", false, "Json output")
+	configuration.BindFlag("json", rootCmd.PersistentFlags().Lookup("json"))
+
+	rootCmd.PersistentFlags().BoolVarP(&yamlOutput, "yaml", "", false, "Yaml output")
+	configuration.BindFlag("yaml", rootCmd.PersistentFlags().Lookup("yaml"))
 
 	// Commands
 	capability.InitializeCapability(configuration.GetString("access-token"))
