@@ -45,11 +45,10 @@ var rootCmd = &cobra.Command{
 	Short:   "cli for dfds selfservice",
 	Long:    `cli for dfds selfservice`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		setOutputWriter()
 		if !noVersionCheck {
 			remoteVersionCheck()
 		}
-
-		setOutputWriter()
 	},
 }
 
