@@ -192,6 +192,8 @@ type CapabilitiesResponse struct {
 	Items []struct {
 		ID           string `json:"id"`
 		Name         string `json:"name"`
+		CreatedAt    string `json:"createdAt"`
+		CreatedBy    string `json:"createdBy"`
 		Status       string `json:"status"`
 		Description  string `json:"description"`
 		JSONMetadata string `json:"jsonMetadata"`
@@ -289,6 +291,8 @@ type TopicsResponse struct {
 type CapabilityByIDResponse struct {
 	Id                        string `json:"id"`
 	Name                      string `json:"name"`
+	CreatedAt                 string `json:"createdAt"`
+	CreatedBy                 string `json:"createdBy"`
 	Status                    string `json:"status"`
 	Description               string `json:"description"`
 	JsonMetadata              string `json:"jsonMetadata"`
