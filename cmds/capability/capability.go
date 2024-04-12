@@ -1,7 +1,9 @@
 package capability
 
 import (
+	"context"
 	"fmt"
+	"go.dfds.cloud/ticli/openapi"
 	"os"
 
 	"go.dfds.cloud/ticli/cmds/configuration"
@@ -49,8 +51,26 @@ var queryCmd = &cobra.Command{
 	Use:   "query",
 	Short: "query the API",
 	Run: func(cmd *cobra.Command, args []string) {
-		capabilities := selfserviceClient.GetCapabilities()
-		outputwriter.GetWriter().WriteData(capabilities)
+		//capabilities := openapi.NewConfiguration()
+		//outputwriter.GetWriter().WriteData(capabilities)
+		configuration := openapi.NewConfiguration()
+		configuration.AddDefaultHeader("Authorization", fmt.Sprintf("Bearer %s", selfserviceClient.AccessToken))
+		apiClient := openapi.NewAPIClient(configuration)
+		resp, r, err := apiClient.CapabilityAPI.CapabilitiesGet(context.Background()).Execute()
+
+		outputwriter.GetWriter().WriteData(resp)
+
+		//fmt.Println(*resp)
+		//
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error when calling `CapabilityAPI.CapabilitiesGet``: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+		}
+		//// response from `CapabilitiesGet`: CapabilityListApiResource
+		//fmt.Fprintf(os.Stdout, "Response from `CapabilityAPI.CapabilitiesGet`: %v\n", resp)
+		//for _, capability := range resp.Items {
+		//	fmt.Println(capability.GetId())
+		//}
 	},
 }
 

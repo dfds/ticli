@@ -1,0 +1,2770 @@
+openapi: 3.0.1
+info:
+  description: SelfService API
+  title: SelfService API
+  version: v1
+servers:
+- url: /ssu/api
+paths:
+  /capabilities:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityListApiResource'
+          description: Success
+      tags:
+      - Capability
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCapabilityRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/NewCapabilityRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/NewCapabilityRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityDetailsApiResource'
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "409":
+          description: Conflict
+      tags:
+      - Capability
+  /capabilities/{id}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityDetailsApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/members:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityMembersApiResource'
+          description: Success
+        "400":
+          description: Bad Request
+      tags:
+      - Capability
+  /capabilities/{id}/awsaccount:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AwsAccountApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AwsAccountApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "409":
+          description: Conflict
+      tags:
+      - Capability
+  /capabilities/{id}/membershipapplications:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipApplicationListApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipApplicationApiResource'
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "409":
+          description: Conflict
+      tags:
+      - Capability
+  /capabilities/{id}/topics:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewKafkaTopicRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/NewKafkaTopicRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/NewKafkaTopicRequest'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "409":
+          description: Conflict
+      tags:
+      - Capability
+  /capabilities/{id}/leave:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/kafkaclusteraccess:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+      tags:
+      - Capability
+  /capabilities/{id}/kafkaclusteraccess/{clusterId}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+        "202":
+          description: Accepted
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: clusterId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "202":
+          description: Accepted
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/requestdeletion:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: user
+        required: false
+        schema:
+          $ref: '#/components/schemas/UserId'
+        style: form
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/canceldeletionrequest:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/metadata:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetCapabilityMetadataRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SetCapabilityMetadataRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SetCapabilityMetadataRequest'
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/required-metadata:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetCapabilityMetadataRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SetCapabilityMetadataRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SetCapabilityMetadataRequest'
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/teams:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      tags:
+      - Capability
+  /capabilities/{id}/join:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/invitations:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvitationsRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/InvitationsRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/InvitationsRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityDetailsApiResource'
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Capability
+  /capabilities/{id}/configurationlevel:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      tags:
+      - Capability
+  /ecr/repositories:
+    get:
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Server Error
+      tags:
+      - ECRRepositories
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewECRRepositoryRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/NewECRRepositoryRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/NewECRRepositoryRequest'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Server Error
+      tags:
+      - ECRRepositories
+  /ecr/synchronize:
+    post:
+      parameters:
+      - explode: true
+        in: query
+        name: updateOnMismatch
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Server Error
+      tags:
+      - ECRRepositories
+  /invitations:
+    get:
+      parameters:
+      - explode: true
+        in: query
+        name: targetType
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "401":
+          description: Unauthorized
+        "400":
+          description: Bad Request
+      tags:
+      - Invitation
+  /invitations/{id}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Invitation
+  /invitations/{id}/accept:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Invitation
+  /invitations/{id}/decline:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Invitation
+  /kafkaclusters:
+    get:
+      responses:
+        "200":
+          description: Success
+      tags:
+      - KafkaCluster
+  /kafkaclusters/{id}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+      tags:
+      - KafkaCluster
+  /kafkatopics:
+    get:
+      parameters:
+      - explode: true
+        in: query
+        name: CapabilityId
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: ClusterId
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: IncludePrivate
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicListApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicListApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicListApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+      tags:
+      - KafkaTopic
+  /kafkatopics/{id}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - KafkaTopic
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - KafkaTopic
+  /kafkatopics/{id}/description:
+    put:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeKafkaTopicDescriptionRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ChangeKafkaTopicDescriptionRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ChangeKafkaTopicDescriptionRequest'
+      responses:
+        "204":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: No Content
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - KafkaTopic
+  /kafkatopics/{id}/consumers:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Server Error
+      tags:
+      - KafkaTopic
+  /kafkatopics/{id}/messagecontracts:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - KafkaTopic
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMessageContractRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/NewMessageContractRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/NewMessageContractRequest'
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: Success
+        "400":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - KafkaTopic
+  /kafkatopics/{id}/messagecontracts/{contractId}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: contractId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+      tags:
+      - KafkaTopic
+  /kafkatopics/{id}/messagecontracts/{contractId}/retry:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: contractId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: Success
+        "400":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - KafkaTopic
+  /kafkatopics/{id}/messagecontracts-validate:
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateMessageContractRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ValidateMessageContractRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ValidateMessageContractRequest'
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/KafkaTopicApiResource'
+          description: Success
+        "400":
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - KafkaTopic
+  /me:
+    get:
+      responses:
+        "200":
+          description: Success
+      tags:
+      - Me
+  /me/personalinformation:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePersonalInformationRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePersonalInformationRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/UpdatePersonalInformationRequest'
+      responses:
+        "200":
+          description: Success
+      tags:
+      - Me
+  /membershipapplications/{id}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipApplicationApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - MembershipApplication
+  /membershipapplications/{id}/approvals:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipApprovalListApiResource'
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - MembershipApplication
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - MembershipApplication
+  /metrics/my-capabilities-costs:
+    get:
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Server Error
+      tags:
+      - Metrics
+  /metrics/out-of-sync-ecr-repos:
+    get:
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Server Error
+      tags:
+      - Metrics
+  /metrics/my-capabilities-resources:
+    get:
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Server Error
+      tags:
+      - Metrics
+  /portalvisits:
+    post:
+      responses:
+        "200":
+          description: Success
+      tags:
+      - PortalVisit
+  /json-schema/{id}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: schemaVersion
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "400":
+          description: Bad Request
+        "500":
+          description: Server Error
+      tags:
+      - SelfServiceJsonSchema
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddSelfServiceJsonSchemaRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AddSelfServiceJsonSchemaRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AddSelfServiceJsonSchemaRequest'
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Server Error
+      tags:
+      - SelfServiceJsonSchema
+  /json-schema/validate:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateSelfServiceJsonSchemaRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ValidateSelfServiceJsonSchemaRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ValidateSelfServiceJsonSchemaRequest'
+      responses:
+        "200":
+          description: Success
+        "401":
+          description: Unauthorized
+        "400":
+          description: Bad Request
+        "500":
+          description: Server Error
+      tags:
+      - SelfServiceJsonSchema
+  /apispecs:
+    get:
+      responses:
+        "200":
+          description: Success
+      tags:
+      - ServiceCatalog
+  /apispecs/{id}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+      tags:
+      - ServiceCatalog
+  /stats:
+    get:
+      responses:
+        "200":
+          description: Success
+      tags:
+      - Stats
+  /system/stats/topvisitors:
+    get:
+      responses:
+        "200":
+          description: Success
+      tags:
+      - System
+  /system/legacy/aad-aws-sync:
+    get:
+      responses:
+        "200":
+          description: Success
+      tags:
+      - System
+  /teams:
+    get:
+      responses:
+        "401":
+          description: Unauthorized
+      tags:
+      - Team
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTeamRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AddTeamRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AddTeamRequest'
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      tags:
+      - Team
+  /teams/{id}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      tags:
+      - Team
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+      tags:
+      - Team
+  /teams/{id}/capability-links/{capabilityId}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: capabilityId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      tags:
+      - Team
+    post:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: capabilityId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      tags:
+      - Team
+  /teams/{id}/capability-links:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+      tags:
+      - Team
+  /teams/{id}/members:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Success
+      tags:
+      - Team
+components:
+  schemas:
+    AddSelfServiceJsonSchemaRequest:
+      additionalProperties: false
+      example:
+        schema:
+          key:
+            parent: null
+            root: null
+            options:
+              propertyNameCaseInsensitive: true
+      properties:
+        schema:
+          additionalProperties:
+            $ref: '#/components/schemas/JsonNode'
+          type: object
+      required:
+      - schema
+      type: object
+    AddTeamRequest:
+      additionalProperties: false
+      example:
+        linkedCapabilityIds:
+        - linkedCapabilityIds
+        - linkedCapabilityIds
+        name: name
+        description: description
+      properties:
+        name:
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        linkedCapabilityIds:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    AwsAccountApiResource:
+      additionalProperties: false
+      example:
+        accountId: accountId
+        roleEmail: roleEmail
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        namespace: namespace
+        id: id
+        status: status
+      properties:
+        id:
+          nullable: true
+          type: string
+        accountId:
+          nullable: true
+          type: string
+        roleEmail:
+          nullable: true
+          type: string
+        namespace:
+          nullable: true
+          type: string
+        status:
+          nullable: true
+          type: string
+        _links:
+          $ref: '#/components/schemas/AwsAccountLinks'
+      type: object
+    AwsAccountLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    CapabilityDetailsApiResource:
+      additionalProperties: false
+      example:
+        jsonMetadata: jsonMetadata
+        _links:
+          leaveCapability:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          joinCapability:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          metadata:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          membershipApplications:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          cancelCapabilityDeletionRequest:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          setRequiredMetadata:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          awsAccount:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          requestCapabilityDeletion:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          sendInvitations:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          configurationLevel:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          members:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          getLinkedTeams:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          clusters:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        name: name
+        description: description
+        jsonMetadataSchemaVersion: 0
+        id: id
+        status: status
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        status:
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        jsonMetadata:
+          nullable: true
+          type: string
+        jsonMetadataSchemaVersion:
+          format: int32
+          type: integer
+        _links:
+          $ref: '#/components/schemas/CapabilityDetailsLinks'
+      type: object
+    CapabilityDetailsLinks:
+      additionalProperties: false
+      example:
+        leaveCapability:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        joinCapability:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        metadata:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        membershipApplications:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        cancelCapabilityDeletionRequest:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        setRequiredMetadata:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        awsAccount:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        requestCapabilityDeletion:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        sendInvitations:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        configurationLevel:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        members:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        getLinkedTeams:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        clusters:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+        members:
+          $ref: '#/components/schemas/ResourceLink'
+        clusters:
+          $ref: '#/components/schemas/ResourceLink'
+        membershipApplications:
+          $ref: '#/components/schemas/ResourceLink'
+        leaveCapability:
+          $ref: '#/components/schemas/ResourceLink'
+        awsAccount:
+          $ref: '#/components/schemas/ResourceLink'
+        requestCapabilityDeletion:
+          $ref: '#/components/schemas/ResourceLink'
+        cancelCapabilityDeletionRequest:
+          $ref: '#/components/schemas/ResourceLink'
+        metadata:
+          $ref: '#/components/schemas/ResourceLink'
+        setRequiredMetadata:
+          $ref: '#/components/schemas/ResourceLink'
+        getLinkedTeams:
+          $ref: '#/components/schemas/ResourceLink'
+        joinCapability:
+          $ref: '#/components/schemas/ResourceLink'
+        sendInvitations:
+          $ref: '#/components/schemas/ResourceLink'
+        configurationLevel:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    CapabilityListApiResource:
+      additionalProperties: false
+      example:
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        items:
+        - awsAccountId: awsAccountId
+          jsonMetadata: jsonMetadata
+          _links:
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          name: name
+          description: description
+          id: id
+          status: status
+        - awsAccountId: awsAccountId
+          jsonMetadata: jsonMetadata
+          _links:
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          name: name
+          description: description
+          id: id
+          status: status
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CapabilityListItemApiResource'
+          nullable: true
+          type: array
+        _links:
+          $ref: '#/components/schemas/CapabilityListLinks'
+      type: object
+    CapabilityListItemApiResource:
+      additionalProperties: false
+      example:
+        awsAccountId: awsAccountId
+        jsonMetadata: jsonMetadata
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        name: name
+        description: description
+        id: id
+        status: status
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        status:
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        jsonMetadata:
+          nullable: true
+          type: string
+        awsAccountId:
+          nullable: true
+          type: string
+        _links:
+          $ref: '#/components/schemas/CapabilityListItemLinks'
+      type: object
+    CapabilityListItemLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    CapabilityListLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    CapabilityMembersApiResource:
+      additionalProperties: false
+      example:
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        items:
+        - name: name
+          id: id
+          email: email
+        - name: name
+          id: id
+          email: email
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MemberApiResource'
+          nullable: true
+          type: array
+        _links:
+          $ref: '#/components/schemas/CapabilityMembersLinks'
+      type: object
+    CapabilityMembersLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    ChangeKafkaTopicDescriptionRequest:
+      additionalProperties: false
+      example:
+        description: description
+      properties:
+        description:
+          nullable: true
+          type: string
+      type: object
+    InvitationsRequest:
+      additionalProperties: false
+      example:
+        invitees:
+        - invitees
+        - invitees
+      properties:
+        invitees:
+          items:
+            type: string
+          type: array
+      required:
+      - invitees
+      type: object
+    JsonNode:
+      additionalProperties: false
+      example:
+        parent: null
+        root: null
+        options:
+          propertyNameCaseInsensitive: true
+      properties:
+        options:
+          $ref: '#/components/schemas/JsonNodeOptions'
+        parent:
+          $ref: '#/components/schemas/JsonNode'
+        root:
+          $ref: '#/components/schemas/JsonNode'
+      type: object
+    JsonNodeOptions:
+      additionalProperties: false
+      example:
+        propertyNameCaseInsensitive: true
+      properties:
+        propertyNameCaseInsensitive:
+          type: boolean
+      type: object
+    KafkaClusterApiResource:
+      additionalProperties: false
+      example:
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        name: name
+        description: description
+        id: id
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        _links:
+          $ref: '#/components/schemas/KafkaClusterLinks'
+      type: object
+    KafkaClusterLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    KafkaClusterListApiResource:
+      additionalProperties: false
+      example:
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        items:
+        - _links:
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          name: name
+          description: description
+          id: id
+        - _links:
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          name: name
+          description: description
+          id: id
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/KafkaClusterApiResource'
+          nullable: true
+          type: array
+        _links:
+          $ref: '#/components/schemas/KafkaClusterListLinks'
+      type: object
+    KafkaClusterListLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    KafkaTopicApiResource:
+      additionalProperties: false
+      example:
+        partitions: 0
+        kafkaClusterId: kafkaClusterId
+        _links:
+          updateDescription:
+            method: method
+            href: href
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          consumers:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+          messageContracts:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        capabilityId: capabilityId
+        name: name
+        description: description
+        id: id
+        retention: retention
+        status: status
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        capabilityId:
+          nullable: true
+          type: string
+        kafkaClusterId:
+          nullable: true
+          type: string
+        partitions:
+          format: int32
+          type: integer
+        retention:
+          nullable: true
+          type: string
+        status:
+          nullable: true
+          type: string
+        _links:
+          $ref: '#/components/schemas/KafkaTopicLinks'
+      type: object
+    KafkaTopicLinks:
+      additionalProperties: false
+      example:
+        updateDescription:
+          method: method
+          href: href
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        consumers:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+        messageContracts:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+        messageContracts:
+          $ref: '#/components/schemas/ResourceLink'
+        consumers:
+          $ref: '#/components/schemas/ResourceLink'
+        updateDescription:
+          $ref: '#/components/schemas/ResourceActionLink'
+      type: object
+    KafkaTopicListApiResource:
+      additionalProperties: false
+      example:
+        _embedded:
+          kafkaClusters:
+            _links:
+              self:
+                allow:
+                - allow
+                - allow
+                rel: rel
+                href: href
+            items:
+            - _links:
+                self:
+                  allow:
+                  - allow
+                  - allow
+                  rel: rel
+                  href: href
+              name: name
+              description: description
+              id: id
+            - _links:
+                self:
+                  allow:
+                  - allow
+                  - allow
+                  rel: rel
+                  href: href
+              name: name
+              description: description
+              id: id
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        items:
+        - partitions: 0
+          kafkaClusterId: kafkaClusterId
+          _links:
+            updateDescription:
+              method: method
+              href: href
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+            consumers:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+            messageContracts:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          capabilityId: capabilityId
+          name: name
+          description: description
+          id: id
+          retention: retention
+          status: status
+        - partitions: 0
+          kafkaClusterId: kafkaClusterId
+          _links:
+            updateDescription:
+              method: method
+              href: href
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+            consumers:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+            messageContracts:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          capabilityId: capabilityId
+          name: name
+          description: description
+          id: id
+          retention: retention
+          status: status
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/KafkaTopicApiResource'
+          nullable: true
+          type: array
+        _embedded:
+          $ref: '#/components/schemas/KafkaTopicListEmbeddedResources'
+        _links:
+          $ref: '#/components/schemas/KafkaTopicListLinks'
+      type: object
+    KafkaTopicListEmbeddedResources:
+      additionalProperties: false
+      example:
+        kafkaClusters:
+          _links:
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          items:
+          - _links:
+              self:
+                allow:
+                - allow
+                - allow
+                rel: rel
+                href: href
+            name: name
+            description: description
+            id: id
+          - _links:
+              self:
+                allow:
+                - allow
+                - allow
+                rel: rel
+                href: href
+            name: name
+            description: description
+            id: id
+      properties:
+        kafkaClusters:
+          $ref: '#/components/schemas/KafkaClusterListApiResource'
+      type: object
+    KafkaTopicListLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    MemberApiResource:
+      additionalProperties: false
+      example:
+        name: name
+        id: id
+        email: email
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        email:
+          nullable: true
+          type: string
+      type: object
+    MembershipApplicationApiResource:
+      additionalProperties: false
+      example:
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        approvals:
+          _links:
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          items:
+          - approvedBy: approvedBy
+            id: id
+            approvedAt: approvedAt
+          - approvedBy: approvedBy
+            id: id
+            approvedAt: approvedAt
+        expiresOn: expiresOn
+        id: id
+        submittedAt: submittedAt
+        applicant: applicant
+      properties:
+        id:
+          nullable: true
+          type: string
+        applicant:
+          nullable: true
+          type: string
+        submittedAt:
+          nullable: true
+          type: string
+        expiresOn:
+          nullable: true
+          type: string
+        approvals:
+          $ref: '#/components/schemas/MembershipApprovalListApiResource'
+        _links:
+          $ref: '#/components/schemas/MembershipApplicationLinks'
+      type: object
+    MembershipApplicationLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    MembershipApplicationListApiResource:
+      additionalProperties: false
+      example:
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        items:
+        - _links:
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          approvals:
+            _links:
+              self:
+                allow:
+                - allow
+                - allow
+                rel: rel
+                href: href
+            items:
+            - approvedBy: approvedBy
+              id: id
+              approvedAt: approvedAt
+            - approvedBy: approvedBy
+              id: id
+              approvedAt: approvedAt
+          expiresOn: expiresOn
+          id: id
+          submittedAt: submittedAt
+          applicant: applicant
+        - _links:
+            self:
+              allow:
+              - allow
+              - allow
+              rel: rel
+              href: href
+          approvals:
+            _links:
+              self:
+                allow:
+                - allow
+                - allow
+                rel: rel
+                href: href
+            items:
+            - approvedBy: approvedBy
+              id: id
+              approvedAt: approvedAt
+            - approvedBy: approvedBy
+              id: id
+              approvedAt: approvedAt
+          expiresOn: expiresOn
+          id: id
+          submittedAt: submittedAt
+          applicant: applicant
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MembershipApplicationApiResource'
+          nullable: true
+          type: array
+        _links:
+          $ref: '#/components/schemas/MembershipApplicationListLinks'
+      type: object
+    MembershipApplicationListLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    MembershipApprovalApiResource:
+      additionalProperties: false
+      example:
+        approvedBy: approvedBy
+        id: id
+        approvedAt: approvedAt
+      properties:
+        id:
+          nullable: true
+          type: string
+        approvedBy:
+          nullable: true
+          type: string
+        approvedAt:
+          nullable: true
+          type: string
+      type: object
+    MembershipApprovalListApiResource:
+      additionalProperties: false
+      example:
+        _links:
+          self:
+            allow:
+            - allow
+            - allow
+            rel: rel
+            href: href
+        items:
+        - approvedBy: approvedBy
+          id: id
+          approvedAt: approvedAt
+        - approvedBy: approvedBy
+          id: id
+          approvedAt: approvedAt
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MembershipApprovalApiResource'
+          nullable: true
+          type: array
+        _links:
+          $ref: '#/components/schemas/MembershipApprovalListLinks'
+      type: object
+    MembershipApprovalListLinks:
+      additionalProperties: false
+      example:
+        self:
+          allow:
+          - allow
+          - allow
+          rel: rel
+          href: href
+      properties:
+        self:
+          $ref: '#/components/schemas/ResourceLink'
+      type: object
+    NewCapabilityRequest:
+      additionalProperties: false
+      example:
+        jsonMetadata: jsonMetadata
+        invitees:
+        - invitees
+        - invitees
+        name: name
+        description: description
+      properties:
+        name:
+          minLength: 1
+          type: string
+        description:
+          nullable: true
+          type: string
+        jsonMetadata:
+          nullable: true
+          type: string
+        invitees:
+          items:
+            type: string
+          nullable: true
+          type: array
+      required:
+      - name
+      type: object
+    NewECRRepositoryRequest:
+      additionalProperties: false
+      example:
+        name: name
+        description: description
+      properties:
+        name:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+      required:
+      - description
+      - name
+      type: object
+    NewKafkaTopicRequest:
+      additionalProperties: false
+      example:
+        partitions: 0
+        kafkaClusterId: kafkaClusterId
+        name: name
+        description: description
+        retention: retention
+      properties:
+        kafkaClusterId:
+          minLength: 1
+          type: string
+        name:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        partitions:
+          format: int32
+          type: integer
+        retention:
+          minLength: 1
+          type: string
+      required:
+      - description
+      - kafkaClusterId
+      - name
+      - partitions
+      - retention
+      type: object
+    NewMessageContractRequest:
+      additionalProperties: false
+      example:
+        schema: schema
+        messageType: messageType
+        description: description
+        example: example
+      properties:
+        messageType:
+          minLength: 1
+          type: string
+        description:
+          minLength: 1
+          type: string
+        example:
+          minLength: 1
+          type: string
+        schema:
+          minLength: 1
+          type: string
+      required:
+      - description
+      - example
+      - messageType
+      - schema
+      type: object
+    ProblemDetails:
+      additionalProperties: {}
+      example:
+        instance: instance
+        detail: detail
+        type: type
+        title: title
+        status: 0
+      properties:
+        type:
+          nullable: true
+          type: string
+        title:
+          nullable: true
+          type: string
+        status:
+          format: int32
+          nullable: true
+          type: integer
+        detail:
+          nullable: true
+          type: string
+        instance:
+          nullable: true
+          type: string
+      type: object
+    ResourceActionLink:
+      additionalProperties: false
+      example:
+        method: method
+        href: href
+      properties:
+        href:
+          nullable: true
+          type: string
+        method:
+          nullable: true
+          type: string
+      type: object
+    ResourceLink:
+      additionalProperties: false
+      example:
+        allow:
+        - allow
+        - allow
+        rel: rel
+        href: href
+      properties:
+        href:
+          nullable: true
+          type: string
+        rel:
+          nullable: true
+          type: string
+        allow:
+          items:
+            type: string
+          nullable: true
+          type: array
+      type: object
+    SetCapabilityMetadataRequest:
+      additionalProperties: false
+      example:
+        jsonMetadata:
+          key:
+            parent: null
+            root: null
+            options:
+              propertyNameCaseInsensitive: true
+      properties:
+        jsonMetadata:
+          additionalProperties:
+            $ref: '#/components/schemas/JsonNode'
+          type: object
+      required:
+      - jsonMetadata
+      type: object
+    UpdatePersonalInformationRequest:
+      additionalProperties: false
+      example:
+        name: name
+        email: email
+      properties:
+        name:
+          nullable: true
+          type: string
+        email:
+          nullable: true
+          type: string
+      type: object
+    UserId:
+      additionalProperties: false
+      type: object
+    ValidateMessageContractRequest:
+      additionalProperties: false
+      example:
+        schema: schema
+        messageType: messageType
+      properties:
+        messageType:
+          minLength: 1
+          type: string
+        schema:
+          minLength: 1
+          type: string
+      required:
+      - messageType
+      - schema
+      type: object
+    ValidateSelfServiceJsonSchemaRequest:
+      additionalProperties: false
+      example:
+        schema:
+          key:
+            parent: null
+            root: null
+            options:
+              propertyNameCaseInsensitive: true
+      properties:
+        schema:
+          additionalProperties:
+            $ref: '#/components/schemas/JsonNode'
+          type: object
+      required:
+      - schema
+      type: object
