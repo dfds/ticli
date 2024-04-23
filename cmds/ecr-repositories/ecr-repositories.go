@@ -1,7 +1,10 @@
 package ecr_repositories
 
 import (
+	"context"
 	"fmt"
+	"go.dfds.cloud/ticli/openapiclient"
+	"log"
 	"os"
 
 	"go.dfds.cloud/ticli/cmds/configuration"
@@ -13,7 +16,7 @@ import (
 )
 
 var (
-	selfserviceClient *selfservice.SelfServiceClient
+	selfserviceClient *openapiclient.ClientWithResponses
 	description       string
 )
 
@@ -33,33 +36,44 @@ func InitializeECR(accessToken string) {
 	configuration.BindFlag("description", createECRCmd.PersistentFlags().Lookup("description"))
 	ECRCmd.AddCommand(queryCmd)
 
-	selfserviceClient = selfservice.NewSelfServiceClient(accessToken)
+	selfserviceClient = selfservice.NewGeneratedClient(accessToken)
 }
 
 var queryCmd = &cobra.Command{
 	Use:   "query",
 	Short: "query the API",
 	Run: func(cmd *cobra.Command, args []string) {
-		repositories := selfserviceClient.GetECRRepositories()
-		outputwriter.GetWriter().WriteData(repositories)
+
+		repositories, err := selfserviceClient.GetEcrRepositoriesWithResponse(context.Background())
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		outputwriter.GetWriter().WriteData(repositories.JSON200)
 	},
 }
 
 var createECRCmd = &cobra.Command{
-	Use:   "create [id]",
+	Use:   "create [NAME]",
 	Short: "creates a new ecr repository",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			outputwriter.GetWriter().WriteError(fmt.Errorf("missing id"))
 			os.Exit(1)
 		}
-		ecrStruct := selfservice.CapabilityRequest{
+		ecrStruct := openapiclient.NewECRRepositoryRequest{
 			Name:        args[0],
 			Description: description,
 		}
 
-		ecr := selfserviceClient.CreateECRRepo(ecrStruct)
-		outputwriter.GetWriter().WriteData(ecr)
+		ecr, err := selfserviceClient.PostEcrRepositoriesWithResponse(context.Background(), ecrStruct)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		outputwriter.GetWriter().WriteData(ecr.JSON200)
 
 	},
 }

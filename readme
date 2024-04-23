@@ -1,0 +1,4 @@
+# Ticli
+
+## generate client command
+`oapi-codegen -package openapiclient -generate types,client  api.json > openapiclient/openapiclient.gen.go`
