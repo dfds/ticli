@@ -2,9 +2,12 @@ package selfservice
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
+	"go.dfds.cloud/ticli/openapiclient"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -19,6 +22,21 @@ const baseURL = "https://api.hellman.oxygen.dfds.cloud/ssu/api"
 
 type SelfServiceClient struct {
 	AccessToken string
+}
+
+func NewGeneratedClient(accessToken string) *openapiclient.ClientWithResponses {
+
+	apiClient, err := openapiclient.NewClientWithResponses(baseURL, openapiclient.WithRequestEditorFn(func(ctx context.Context, req *http.Request) error {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+
+		return nil
+	}))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return apiClient
 }
 
 func NewSelfServiceClient(accessToken string) *SelfServiceClient {

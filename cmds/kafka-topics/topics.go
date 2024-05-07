@@ -1,14 +1,18 @@
 package kafka_topics
 
 import (
+	"context"
+	"fmt"
 	"go.dfds.cloud/ticli/cmds/outputwriter"
+	"go.dfds.cloud/ticli/openapiclient"
 	"go.dfds.cloud/ticli/selfservice"
+	"log"
 
 	"github.com/spf13/cobra"
 )
 
 var (
-	selfserviceClient *selfservice.SelfServiceClient
+	selfserviceClient *openapiclient.ClientWithResponses
 )
 
 var TopicsCmd = &cobra.Command{
@@ -22,7 +26,7 @@ var TopicsCmd = &cobra.Command{
 func InitTopics(accessToken string) {
 	TopicsCmd.AddCommand(queryCmd)
 
-	selfserviceClient = selfservice.NewSelfServiceClient(accessToken)
+	selfserviceClient = selfservice.NewGeneratedClient(accessToken)
 
 }
 
@@ -30,7 +34,14 @@ var queryCmd = &cobra.Command{
 	Use:   "query",
 	Short: "query the API",
 	Run: func(cmd *cobra.Command, args []string) {
-		topics := selfserviceClient.GetTopics()
-		outputwriter.GetWriter().WriteData(topics)
+
+		topics, err := selfserviceClient.GetKafkatopicsWithResponse(context.Background(), nil)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(topics.StatusCode())
+		outputwriter.GetWriter().WriteData(topics.JSON200)
 	},
 }

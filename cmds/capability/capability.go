@@ -1,7 +1,10 @@
 package capability
 
 import (
+	"context"
 	"fmt"
+	"go.dfds.cloud/ticli/openapiclient"
+	"log"
 	"os"
 
 	"go.dfds.cloud/ticli/cmds/configuration"
@@ -13,7 +16,7 @@ import (
 )
 
 var (
-	selfserviceClient *selfservice.SelfServiceClient
+	selfserviceClient *openapiclient.ClientWithResponses
 
 	description string
 	metadata    string
@@ -42,15 +45,21 @@ func InitializeCapability(accessToken string) {
 	createCapabilityCmd.PersistentFlags().StringArrayVar(&invitees, "invitees", []string{}, "add invitees array to a capability")
 	configuration.BindFlag("invitees", createCapabilityCmd.PersistentFlags().Lookup("invitees"))
 
-	selfserviceClient = selfservice.NewSelfServiceClient(accessToken)
+	selfserviceClient = selfservice.NewGeneratedClient(accessToken)
 }
 
 var queryCmd = &cobra.Command{
 	Use:   "query",
 	Short: "query the API",
 	Run: func(cmd *cobra.Command, args []string) {
-		capabilities := selfserviceClient.GetCapabilities()
-		outputwriter.GetWriter().WriteData(capabilities)
+
+		capabilities, err := selfserviceClient.GetCapabilitiesWithResponse(context.Background())
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		outputwriter.GetWriter().WriteData(capabilities.JSON200)
 	},
 }
 
@@ -62,8 +71,15 @@ var capabilityByIdCmd = &cobra.Command{
 			outputwriter.GetWriter().WriteError(fmt.Errorf("missing id"))
 			os.Exit(1)
 		}
-		capabilityById := selfserviceClient.GetCapabilityByID(args[0])
-		outputwriter.GetWriter().WriteData(capabilityById)
+
+		capability, err := selfserviceClient.GetCapabilitiesIdWithResponse(context.Background(), args[0])
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		outputwriter.GetWriter().WriteData(capability.JSON200)
+
 	},
 }
 
@@ -75,15 +91,23 @@ var createCapabilityCmd = &cobra.Command{
 			outputwriter.GetWriter().WriteError(fmt.Errorf("missing name"))
 			os.Exit(1)
 		}
-		capabilityStruct := selfservice.CapabilityRequest{
+		capabilityStruct := openapiclient.NewCapabilityRequest{
 			Name:         args[0],
-			Description:  description,
-			Invitees:     invitees,
-			JsonMetadata: metadata,
+			Description:  &description,
+			Invitees:     &invitees,
+			JsonMetadata: &metadata,
 		}
 
-		capability := selfserviceClient.CreateCapability(capabilityStruct)
-		outputwriter.GetWriter().WriteData(capability)
+		fmt.Println("before post")
+
+		capability, err := selfserviceClient.PostCapabilitiesWithResponse(context.Background(), capabilityStruct)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println("after post")
+		outputwriter.GetWriter().WriteData(capability.JSON201)
 
 	},
 }
