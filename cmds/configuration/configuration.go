@@ -94,6 +94,10 @@ func ClearAccessToken() {
 	os.Remove(fmt.Sprintf("%s/%s", configPath, accessTokenFile))
 }
 
+func PrintAccessToken() {
+	outputwriter.GetWriter().WriteData(viper.GetString("access-token"))
+}
+
 func BindFlag(key string, flag *pflag.Flag) {
 	viper.BindPFlag(key, flag)
 }
