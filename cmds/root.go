@@ -24,8 +24,6 @@ var (
 )
 
 func setOutputWriter() {
-	outputwriter.SetWriter(outputwriter.CreateDefaultWriter())
-
 	if jsonOutput && yamlOutput {
 		outputwriter.GetWriter().WriteError(fmt.Errorf("only one of json or yaml output can be selected"))
 		os.Exit(1)
@@ -53,6 +51,7 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+	outputwriter.SetWriter(outputwriter.CreateDefaultWriter())
 	if err := rootCmd.Execute(); err != nil {
 		outputwriter.GetWriter().WriteError(fmt.Errorf("error while executing root command %s", err))
 		os.Exit(1)
