@@ -21,6 +21,7 @@ var AuthenticationCmd = &cobra.Command{
 
 func InitializeAuthentication() {
 	AuthenticationCmd.AddCommand(clearInformationCmd)
+	AuthenticationCmd.AddCommand(printTokenCmd)
 }
 
 func authenticateCmdFunction(cmd *cobra.Command, args []string) {
@@ -50,5 +51,13 @@ var clearInformationCmd = &cobra.Command{
 	Short: "removes all stored authentication data",
 	Run: func(cmd *cobra.Command, args []string) {
 		configuration.ClearAccessToken()
+	},
+}
+
+var printTokenCmd = &cobra.Command{
+	Use:   "print",
+	Short: "print the stored access token",
+	Run: func(cmd *cobra.Command, args []string) {
+		configuration.PrintAccessToken()
 	},
 }
