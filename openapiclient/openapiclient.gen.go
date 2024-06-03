@@ -60,6 +60,7 @@ type CapabilityDetailsApiResource struct {
 // CapabilityDetailsLinks defines model for CapabilityDetailsLinks.
 type CapabilityDetailsLinks struct {
 	AwsAccount                      *ResourceLink `json:"awsAccount,omitempty"`
+	AzureResources                  *ResourceLink `json:"azureResources,omitempty"`
 	CancelCapabilityDeletionRequest *ResourceLink `json:"cancelCapabilityDeletionRequest,omitempty"`
 	Clusters                        *ResourceLink `json:"clusters,omitempty"`
 	ConfigurationLevel              *ResourceLink `json:"configurationLevel,omitempty"`
@@ -262,6 +263,11 @@ type MembershipApprovalListLinks struct {
 	Self *ResourceLink `json:"self,omitempty"`
 }
 
+// NewAzureResourceRequest defines model for NewAzureResourceRequest.
+type NewAzureResourceRequest struct {
+	Environment string `json:"environment"`
+}
+
 // NewCapabilityRequest defines model for NewCapabilityRequest.
 type NewCapabilityRequest struct {
 	Description  *string   `json:"description"`
@@ -373,6 +379,12 @@ type PostCapabilitiesApplicationWildcardPlusJSONRequestBody = NewCapabilityReque
 
 // PostCapabilitiesJSONRequestBody defines body for PostCapabilities for application/json ContentType.
 type PostCapabilitiesJSONRequestBody = NewCapabilityRequest
+
+// PostCapabilitiesIdAzureresourcesApplicationWildcardPlusJSONRequestBody defines body for PostCapabilitiesIdAzureresources for application/*+json ContentType.
+type PostCapabilitiesIdAzureresourcesApplicationWildcardPlusJSONRequestBody = NewAzureResourceRequest
+
+// PostCapabilitiesIdAzureresourcesJSONRequestBody defines body for PostCapabilitiesIdAzureresources for application/json ContentType.
+type PostCapabilitiesIdAzureresourcesJSONRequestBody = NewAzureResourceRequest
 
 // PostCapabilitiesIdInvitationsApplicationWildcardPlusJSONRequestBody defines body for PostCapabilitiesIdInvitations for application/*+json ContentType.
 type PostCapabilitiesIdInvitationsApplicationWildcardPlusJSONRequestBody = InvitationsRequest
@@ -671,6 +683,19 @@ type ClientInterface interface {
 
 	// PostCapabilitiesIdAwsaccount request
 	PostCapabilitiesIdAwsaccount(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetCapabilitiesIdAzureresources request
+	GetCapabilitiesIdAzureresources(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostCapabilitiesIdAzureresourcesWithBody request with any body
+	PostCapabilitiesIdAzureresourcesWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostCapabilitiesIdAzureresourcesWithApplicationWildcardPlusJSONBody(ctx context.Context, id string, body PostCapabilitiesIdAzureresourcesApplicationWildcardPlusJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostCapabilitiesIdAzureresources(ctx context.Context, id string, body PostCapabilitiesIdAzureresourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetCapabilitiesIdAzureresourcesRid request
+	GetCapabilitiesIdAzureresourcesRid(ctx context.Context, id string, rid string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PostCapabilitiesIdCanceldeletionrequest request
 	PostCapabilitiesIdCanceldeletionrequest(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -996,6 +1021,66 @@ func (c *Client) GetCapabilitiesIdAwsaccount(ctx context.Context, id string, req
 
 func (c *Client) PostCapabilitiesIdAwsaccount(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostCapabilitiesIdAwsaccountRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetCapabilitiesIdAzureresources(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetCapabilitiesIdAzureresourcesRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostCapabilitiesIdAzureresourcesWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostCapabilitiesIdAzureresourcesRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostCapabilitiesIdAzureresourcesWithApplicationWildcardPlusJSONBody(ctx context.Context, id string, body PostCapabilitiesIdAzureresourcesApplicationWildcardPlusJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostCapabilitiesIdAzureresourcesRequestWithApplicationWildcardPlusJSONBody(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostCapabilitiesIdAzureresources(ctx context.Context, id string, body PostCapabilitiesIdAzureresourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostCapabilitiesIdAzureresourcesRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetCapabilitiesIdAzureresourcesRid(ctx context.Context, id string, rid string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetCapabilitiesIdAzureresourcesRidRequest(c.Server, id, rid)
 	if err != nil {
 		return nil, err
 	}
@@ -2236,6 +2321,139 @@ func NewPostCapabilitiesIdAwsaccountRequest(server string, id string) (*http.Req
 	}
 
 	req, err := http.NewRequest("POST", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetCapabilitiesIdAzureresourcesRequest generates requests for GetCapabilitiesIdAzureresources
+func NewGetCapabilitiesIdAzureresourcesRequest(server string, id string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/capabilities/%s/azureresources", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostCapabilitiesIdAzureresourcesRequestWithApplicationWildcardPlusJSONBody calls the generic PostCapabilitiesIdAzureresources builder with application/*+json body
+func NewPostCapabilitiesIdAzureresourcesRequestWithApplicationWildcardPlusJSONBody(server string, id string, body PostCapabilitiesIdAzureresourcesApplicationWildcardPlusJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostCapabilitiesIdAzureresourcesRequestWithBody(server, id, "application/*+json", bodyReader)
+}
+
+// NewPostCapabilitiesIdAzureresourcesRequest calls the generic PostCapabilitiesIdAzureresources builder with application/json body
+func NewPostCapabilitiesIdAzureresourcesRequest(server string, id string, body PostCapabilitiesIdAzureresourcesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostCapabilitiesIdAzureresourcesRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewPostCapabilitiesIdAzureresourcesRequestWithBody generates requests for PostCapabilitiesIdAzureresources with any type of body
+func NewPostCapabilitiesIdAzureresourcesRequestWithBody(server string, id string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/capabilities/%s/azureresources", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetCapabilitiesIdAzureresourcesRidRequest generates requests for GetCapabilitiesIdAzureresourcesRid
+func NewGetCapabilitiesIdAzureresourcesRidRequest(server string, id string, rid string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "rid", runtime.ParamLocationPath, rid)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/capabilities/%s/azureresources/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -4663,6 +4881,19 @@ type ClientWithResponsesInterface interface {
 	// PostCapabilitiesIdAwsaccountWithResponse request
 	PostCapabilitiesIdAwsaccountWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdAwsaccountResponse, error)
 
+	// GetCapabilitiesIdAzureresourcesWithResponse request
+	GetCapabilitiesIdAzureresourcesWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetCapabilitiesIdAzureresourcesResponse, error)
+
+	// PostCapabilitiesIdAzureresourcesWithBodyWithResponse request with any body
+	PostCapabilitiesIdAzureresourcesWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdAzureresourcesResponse, error)
+
+	PostCapabilitiesIdAzureresourcesWithApplicationWildcardPlusJSONBodyWithResponse(ctx context.Context, id string, body PostCapabilitiesIdAzureresourcesApplicationWildcardPlusJSONRequestBody, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdAzureresourcesResponse, error)
+
+	PostCapabilitiesIdAzureresourcesWithResponse(ctx context.Context, id string, body PostCapabilitiesIdAzureresourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdAzureresourcesResponse, error)
+
+	// GetCapabilitiesIdAzureresourcesRidWithResponse request
+	GetCapabilitiesIdAzureresourcesRidWithResponse(ctx context.Context, id string, rid string, reqEditors ...RequestEditorFn) (*GetCapabilitiesIdAzureresourcesRidResponse, error)
+
 	// PostCapabilitiesIdCanceldeletionrequestWithResponse request
 	PostCapabilitiesIdCanceldeletionrequestWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdCanceldeletionrequestResponse, error)
 
@@ -5035,6 +5266,72 @@ func (r PostCapabilitiesIdAwsaccountResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostCapabilitiesIdAwsaccountResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetCapabilitiesIdAzureresourcesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AwsAccountApiResource
+}
+
+// Status returns HTTPResponse.Status
+func (r GetCapabilitiesIdAzureresourcesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetCapabilitiesIdAzureresourcesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostCapabilitiesIdAzureresourcesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AwsAccountApiResource
+}
+
+// Status returns HTTPResponse.Status
+func (r PostCapabilitiesIdAzureresourcesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostCapabilitiesIdAzureresourcesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetCapabilitiesIdAzureresourcesRidResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AwsAccountApiResource
+}
+
+// Status returns HTTPResponse.Status
+func (r GetCapabilitiesIdAzureresourcesRidResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetCapabilitiesIdAzureresourcesRidResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -6380,6 +6677,49 @@ func (c *ClientWithResponses) PostCapabilitiesIdAwsaccountWithResponse(ctx conte
 	return ParsePostCapabilitiesIdAwsaccountResponse(rsp)
 }
 
+// GetCapabilitiesIdAzureresourcesWithResponse request returning *GetCapabilitiesIdAzureresourcesResponse
+func (c *ClientWithResponses) GetCapabilitiesIdAzureresourcesWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetCapabilitiesIdAzureresourcesResponse, error) {
+	rsp, err := c.GetCapabilitiesIdAzureresources(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetCapabilitiesIdAzureresourcesResponse(rsp)
+}
+
+// PostCapabilitiesIdAzureresourcesWithBodyWithResponse request with arbitrary body returning *PostCapabilitiesIdAzureresourcesResponse
+func (c *ClientWithResponses) PostCapabilitiesIdAzureresourcesWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdAzureresourcesResponse, error) {
+	rsp, err := c.PostCapabilitiesIdAzureresourcesWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostCapabilitiesIdAzureresourcesResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostCapabilitiesIdAzureresourcesWithApplicationWildcardPlusJSONBodyWithResponse(ctx context.Context, id string, body PostCapabilitiesIdAzureresourcesApplicationWildcardPlusJSONRequestBody, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdAzureresourcesResponse, error) {
+	rsp, err := c.PostCapabilitiesIdAzureresourcesWithApplicationWildcardPlusJSONBody(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostCapabilitiesIdAzureresourcesResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostCapabilitiesIdAzureresourcesWithResponse(ctx context.Context, id string, body PostCapabilitiesIdAzureresourcesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdAzureresourcesResponse, error) {
+	rsp, err := c.PostCapabilitiesIdAzureresources(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostCapabilitiesIdAzureresourcesResponse(rsp)
+}
+
+// GetCapabilitiesIdAzureresourcesRidWithResponse request returning *GetCapabilitiesIdAzureresourcesRidResponse
+func (c *ClientWithResponses) GetCapabilitiesIdAzureresourcesRidWithResponse(ctx context.Context, id string, rid string, reqEditors ...RequestEditorFn) (*GetCapabilitiesIdAzureresourcesRidResponse, error) {
+	rsp, err := c.GetCapabilitiesIdAzureresourcesRid(ctx, id, rid, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetCapabilitiesIdAzureresourcesRidResponse(rsp)
+}
+
 // PostCapabilitiesIdCanceldeletionrequestWithResponse request returning *PostCapabilitiesIdCanceldeletionrequestResponse
 func (c *ClientWithResponses) PostCapabilitiesIdCanceldeletionrequestWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*PostCapabilitiesIdCanceldeletionrequestResponse, error) {
 	rsp, err := c.PostCapabilitiesIdCanceldeletionrequest(ctx, id, reqEditors...)
@@ -7248,6 +7588,84 @@ func ParsePostCapabilitiesIdAwsaccountResponse(rsp *http.Response) (*PostCapabil
 	}
 
 	response := &PostCapabilitiesIdAwsaccountResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AwsAccountApiResource
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetCapabilitiesIdAzureresourcesResponse parses an HTTP response from a GetCapabilitiesIdAzureresourcesWithResponse call
+func ParseGetCapabilitiesIdAzureresourcesResponse(rsp *http.Response) (*GetCapabilitiesIdAzureresourcesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetCapabilitiesIdAzureresourcesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AwsAccountApiResource
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostCapabilitiesIdAzureresourcesResponse parses an HTTP response from a PostCapabilitiesIdAzureresourcesWithResponse call
+func ParsePostCapabilitiesIdAzureresourcesResponse(rsp *http.Response) (*PostCapabilitiesIdAzureresourcesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostCapabilitiesIdAzureresourcesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AwsAccountApiResource
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetCapabilitiesIdAzureresourcesRidResponse parses an HTTP response from a GetCapabilitiesIdAzureresourcesRidWithResponse call
+func ParseGetCapabilitiesIdAzureresourcesRidResponse(rsp *http.Response) (*GetCapabilitiesIdAzureresourcesRidResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetCapabilitiesIdAzureresourcesRidResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}

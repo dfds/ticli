@@ -3,9 +3,9 @@ package ecr_repositories
 import (
 	"context"
 	"fmt"
-	"go.dfds.cloud/ticli/openapiclient"
-	"log"
 	"os"
+
+	"go.dfds.cloud/ticli/openapiclient"
 
 	"go.dfds.cloud/ticli/cmds/configuration"
 
@@ -47,7 +47,7 @@ var queryCmd = &cobra.Command{
 		repositories, err := selfserviceClient.GetEcrRepositoriesWithResponse(context.Background())
 
 		if err != nil {
-			log.Fatal(err)
+			outputwriter.GetWriter().WriteError(err)
 		}
 
 		outputwriter.GetWriter().WriteData(repositories.JSON200)
@@ -70,7 +70,7 @@ var createECRCmd = &cobra.Command{
 		ecr, err := selfserviceClient.PostEcrRepositoriesWithResponse(context.Background(), ecrStruct)
 
 		if err != nil {
-			log.Fatal(err)
+			outputwriter.GetWriter().WriteError(err)
 		}
 
 		outputwriter.GetWriter().WriteData(ecr.JSON200)

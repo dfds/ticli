@@ -2,11 +2,10 @@ package kafka_topics
 
 import (
 	"context"
-	"fmt"
+
 	"go.dfds.cloud/ticli/cmds/outputwriter"
 	"go.dfds.cloud/ticli/openapiclient"
 	"go.dfds.cloud/ticli/selfservice"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -38,10 +37,9 @@ var queryCmd = &cobra.Command{
 		topics, err := selfserviceClient.GetKafkatopicsWithResponse(context.Background(), nil)
 
 		if err != nil {
-			log.Fatal(err)
+			outputwriter.GetWriter().WriteError(err)
 		}
 
-		fmt.Println(topics.StatusCode())
 		outputwriter.GetWriter().WriteData(topics.JSON200)
 	},
 }

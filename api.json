@@ -53,8 +53,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "Success",
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
@@ -209,6 +209,139 @@
           },
           "409": {
             "description": "Conflict"
+          }
+        }
+      }
+    },
+    "/capabilities/{id}/azureresources": {
+      "get": {
+        "tags": [
+          "Capability"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AwsAccountApiResource"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Capability"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAzureResourceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAzureResourceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewAzureResourceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AwsAccountApiResource"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
+    "/capabilities/{id}/azureresources/{rid}": {
+      "get": {
+        "tags": [
+          "Capability"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AwsAccountApiResource"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
@@ -816,7 +949,17 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ECRRepository"
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -854,7 +997,14 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ECRRepository"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -2365,6 +2515,9 @@
           "awsAccount": {
             "$ref": "#/components/schemas/ResourceLink"
           },
+          "azureResources": {
+            "$ref": "#/components/schemas/ResourceLink"
+          },
           "requestCapabilityDeletion": {
             "$ref": "#/components/schemas/ResourceLink"
           },
@@ -2500,6 +2653,36 @@
             "nullable": true
           }
         },
+        "additionalProperties": false
+      },
+      "ECRRepository": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ECRRepositoryId"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ECRRepositoryId": {
+        "type": "object",
         "additionalProperties": false
       },
       "InvitationsRequest": {
@@ -2811,6 +2994,19 @@
         "properties": {
           "self": {
             "$ref": "#/components/schemas/ResourceLink"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NewAzureResourceRequest": {
+        "required": [
+          "environment"
+        ],
+        "type": "object",
+        "properties": {
+          "environment": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
