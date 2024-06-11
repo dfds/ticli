@@ -5,12 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go.dfds.cloud/ticli/openapiclient"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"go.dfds.cloud/ticli/openapiclient"
 
 	"go.dfds.cloud/ticli/cmds/outputwriter"
 )
@@ -33,7 +33,7 @@ func NewGeneratedClient(accessToken string) *openapiclient.ClientWithResponses {
 	}))
 
 	if err != nil {
-		log.Fatal(err)
+		outputwriter.GetWriter().WriteError(err)
 	}
 
 	return apiClient
