@@ -3,6 +3,7 @@ package outputwriter
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 )
 
 type JsonError struct {
@@ -26,7 +27,7 @@ func (j *JsonWriter) WriteError(err error) {
 	jsonData, err := json.MarshalIndent(e, "", "  ")
 	if err != nil {
 		j.WriteError(err)
-		return
+		os.Exit(1) // errors should indicate issues also via exit code
 	}
 	fmt.Println(string(jsonData))
 }
