@@ -2,6 +2,7 @@ package capability
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -19,10 +20,11 @@ import (
 var (
 	selfserviceClient *openapiclient.ClientWithResponses
 
-	description  string
-	metadata     string
-	invitees     []string
-	CapabilityId string
+	description         string
+	metadata            string
+	invitees            []string
+	CapabilityId        string
+	RecommendationLevel string
 
 	NoIdError = errors.New("No id specified")
 )
@@ -39,6 +41,7 @@ func InitializeCapability(accessToken string) {
 	CapabilityCmd.AddCommand(queryCmd)
 	//CapabilityCmd.AddCommand(capabilityByIdCmd)
 	CapabilityCmd.AddCommand(createCapabilityCmd)
+	CapabilityCmd.AddCommand(recommendationsCmd)
 
 	CapabilityCmd.PersistentFlags().StringVar(&CapabilityId, "id", "", "define capability id")
 
@@ -51,6 +54,8 @@ func InitializeCapability(accessToken string) {
 	createCapabilityCmd.PersistentFlags().StringArrayVar(&invitees, "invitees", []string{}, "add invitees array to a capability")
 	configuration.BindFlag("invitees", createCapabilityCmd.PersistentFlags().Lookup("invitees"))
 
+	recommendationsCmd.PersistentFlags().StringVar(&RecommendationLevel, "level", "", "check desired recommendation level (partial, full, none)")
+
 	selfserviceClient = selfservice.NewGeneratedClient(accessToken)
 
 	InitAWS(configuration.GetString("access-token"))
@@ -58,6 +63,7 @@ func InitializeCapability(accessToken string) {
 
 	InitAzure(configuration.GetString("access-token"))
 	CapabilityCmd.AddCommand(AzureCmd)
+
 }
 
 var queryCmd = &cobra.Command{
@@ -117,16 +123,43 @@ var createCapabilityCmd = &cobra.Command{
 			JsonMetadata: &metadata,
 		}
 
-		fmt.Println("before post")
-
 		capability, err := selfserviceClient.PostCapabilitiesWithResponse(context.Background(), capabilityStruct)
 
 		if err != nil {
 			outputwriter.GetWriter().WriteError(err)
 		}
-
-		fmt.Println("after post")
 		outputwriter.GetWriter().WriteData(capability.JSON201)
 
+	},
+}
+
+var recommendationsCmd = &cobra.Command{
+	Use:   "recommendations",
+	Short: "list recommendations",
+	Run: func(cmd *cobra.Command, args []string) {
+		if cmd.Flags().Changed("id") { // Id is set; Get specific capability
+			configurationLevel, err := selfserviceClient.GetCapabilitiesIdConfigurationlevelWithResponse(context.Background(), CapabilityId)
+			if err != nil {
+				outputwriter.GetWriter().WriteError(err)
+			}
+
+			var recommendation map[string]interface{}
+			err = json.Unmarshal(configurationLevel.Body, &recommendation)
+			if err != nil {
+				outputwriter.GetWriter().WriteError(errors.New(fmt.Sprint("Error parsing JSON:", err)))
+			}
+
+			if cmd.Flags().Changed("level") { // desired level set, return goodly if it matches
+				if recommendation["overallLevel"] == RecommendationLevel {
+					outputwriter.GetWriter().WriteData("Capability configuration level matches expectations")
+				} else {
+					outputwriter.GetWriter().WriteError(errors.New("capability configuration level does not match expectations"))
+				}
+			} else { // desired level not set, return all recommendations
+				outputwriter.GetWriter().WriteData(recommendation)
+			}
+		} else {
+			outputwriter.GetWriter().WriteError(NoIdError)
+		}
 	},
 }

@@ -2,6 +2,7 @@ package outputwriter
 
 import (
 	"fmt"
+	"os"
 
 	"gopkg.in/yaml.v3"
 )
@@ -27,7 +28,7 @@ func (y *YamlWriter) WriteError(err error) {
 	yamlData, err := yaml.Marshal(e)
 	if err != nil {
 		y.WriteError(err)
-		return
+		os.Exit(1) // errors should indicate issues also via exit code
 	}
 	fmt.Println(string(yamlData))
 }
